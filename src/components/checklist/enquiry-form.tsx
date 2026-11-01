@@ -16,6 +16,12 @@ import { createChecklistEnquiry } from "@/lib/course";
 const CHECKLIST_URL = "/downloads/cscs-exam-checklist.pdf";
 const CHECKLIST_FILE_NAME = "KINETIKA-CSCS-Exam-Prep-Checklist.pdf";
 
+/**
+ * Netlify Forms: this name must match the hidden static form rendered at the
+ * bottom of this component so Netlify's build-time crawler detects it.
+ */
+const NETLIFY_FORM_NAME = "lead";
+
 const WHATS_INSIDE = [
   "Exam facts & format, decoded",
   "A 4-phase preparation plan",
@@ -54,7 +60,30 @@ export function ChecklistEnquiryForm() {
     }
     setIsLoading(true);
     try {
-      await createChecklistEnquiry({ name, email, phone, challenge });
+      // 1. Submit to Netlify Forms (lead capture / email notifications).
+      const body = new URLSearchParams({
+        "form-name": NETLIFY_FORM_NAME,
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        challenge: challenge.trim(),
+      });
+      const res = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
+      if (!res.ok) {
+        throw new Error(`Netlify Forms submission failed (${res.status})`);
+      }
+
+      // 2. Best-effort Firestore save — never block the user if it fails.
+      try {
+        await createChecklistEnquiry({ name, email, phone, challenge });
+      } catch (firestoreErr) {
+        console.error("Firestore save failed (Netlify submission succeeded):", firestoreErr);
+      }
+
       setSubmitted(true);
     } catch (err) {
       console.error("Checklist enquiry failed:", err);
@@ -116,7 +145,22 @@ export function ChecklistEnquiryForm() {
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} noValidate>
+          <form
+            name={NETLIFY_FORM_NAME}
+            method="POST"
+            action="/"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+            onSubmit={handleSubmit}
+            noValidate
+          >
+            {/* Netlify Forms: required hidden fields */}
+            <input type="hidden" name="form-name" value={NETLIFY_FORM_NAME} />
+            <p className="hidden">
+              <label>
+                Don't fill this out if you're human: <input name="bot-field" tabIndex={-1} autoComplete="off" />
+              </label>
+            </p>
             <h3 className="text-2xl font-bold text-slate-900 dark:text-zinc-100 mb-1">Get instant access</h3>
             <p className="text-slate-500 dark:text-zinc-400 text-sm mb-8">
               Fill in the form and the download unlocks right away.
@@ -217,6 +261,22 @@ export function ChecklistEnquiryForm() {
           </form>
         )}
       </div>
+
+      {/* Hidden static form so Netlify's build-time crawler detects "lead"
+          with the same fields the client-rendered form posts. */}
+      <form
+        name={NETLIFY_FORM_NAME}
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        hidden
+      >
+        <input type="hidden" name="form-name" value={NETLIFY_FORM_NAME} />
+        <input type="text" name="bot-field" />
+        <input type="text" name="name" />
+        <input type="email" name="email" />
+        <input type="tel" name="phone" />
+        <textarea name="challenge" />
+      </form>
     </div>
   );
 }

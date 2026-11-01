@@ -61,8 +61,29 @@ export function Footer() {
               {siteConfig.email}
             </a>
 
-            <div>
-              &copy; 2026 KINÉTIKA. All rights reserved.
+            <div className="flex flex-col items-center gap-3 md:flex-row md:gap-6">
+              <div>
+                &copy; 2026 KINÉTIKA. All rights reserved.
+              </div>
+              <div className="inline-flex items-center gap-2">
+                <span>Designed and developed by</span>
+                <a
+                  href="https://res.cloudinary.com/db1iuag6s/image/upload/v1780993584/drupto_logo_without_bg2_vql6kd.png"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 font-semibold text-slate-400 transition-colors hover:text-white dark:text-zinc-300"
+                >
+                  DRUPTO
+                  <Image
+                    src="https://res.cloudinary.com/db1iuag6s/image/upload/v1780993584/drupto_logo_without_bg2_vql6kd.png"
+                    alt="DRUPTO"
+                    width={64}
+                    height={24}
+                    className="h-5 w-auto"
+                    unoptimized
+                  />
+                </a>
+              </div>
             </div>
           </div>
         </div>
