@@ -61,6 +61,8 @@ export function ChecklistEnquiryForm() {
     setIsLoading(true);
     try {
       // 1. Submit to Netlify Forms (lead capture / email notifications).
+      // The form itself lives in public/lead-form.html — with the OpenNext
+      // adapter, Netlify only processes POSTs to the file that declares it.
       const body = new URLSearchParams({
         "form-name": NETLIFY_FORM_NAME,
         name: name.trim(),
@@ -68,7 +70,7 @@ export function ChecklistEnquiryForm() {
         phone: phone.trim(),
         challenge: challenge.trim(),
       });
-      const res = await fetch("/", {
+      const res = await fetch("/lead-form.html", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: body.toString(),
@@ -147,20 +149,9 @@ export function ChecklistEnquiryForm() {
         ) : (
           <form
             name={NETLIFY_FORM_NAME}
-            method="POST"
-            action="/"
-            data-netlify="true"
-            netlify-honeypot="bot-field"
             onSubmit={handleSubmit}
             noValidate
           >
-            {/* Netlify Forms: required hidden fields */}
-            <input type="hidden" name="form-name" value={NETLIFY_FORM_NAME} />
-            <p className="hidden">
-              <label>
-                Don't fill this out if you're human: <input name="bot-field" tabIndex={-1} autoComplete="off" />
-              </label>
-            </p>
             <h3 className="text-2xl font-bold text-slate-900 dark:text-zinc-100 mb-1">Get instant access</h3>
             <p className="text-slate-500 dark:text-zinc-400 text-sm mb-8">
               Fill in the form and the download unlocks right away.
@@ -261,22 +252,6 @@ export function ChecklistEnquiryForm() {
           </form>
         )}
       </div>
-
-      {/* Hidden static form so Netlify's build-time crawler detects "lead"
-          with the same fields the client-rendered form posts. */}
-      <form
-        name={NETLIFY_FORM_NAME}
-        data-netlify="true"
-        netlify-honeypot="bot-field"
-        hidden
-      >
-        <input type="hidden" name="form-name" value={NETLIFY_FORM_NAME} />
-        <input type="text" name="bot-field" />
-        <input type="text" name="name" />
-        <input type="email" name="email" />
-        <input type="tel" name="phone" />
-        <textarea name="challenge" />
-      </form>
     </div>
   );
 }

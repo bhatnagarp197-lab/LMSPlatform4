@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Lead form</title>
+  </head>
+  <body>
+    <!--
+      Netlify Forms + Next.js (OpenNext adapter) migration:
+      Forms must live in plain static HTML served from /public — forms inside
+      Next.js prerendered pages break the @netlify/plugin-nextjs v5 build.
+      The React lead form (src/components/checklist/enquiry-form.tsx) POSTs its
+      submissions to this file's URL via AJAX. Do not remove or rename the
+      fields without updating the client-side form.
+    -->
+    <form name="lead" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="lead" />
+      <p class="hidden">
+        <label>
+          Don't fill this out if you're human: <input name="bot-field" />
+        </label>
+      </p>
+      <p>
+        <label>Name: <input type="text" name="name" /></label>
+      </p>
+      <p>
+        <label>Email: <input type="email" name="email" /></label>
+      </p>
+      <p>
+        <label>Phone: <input type="tel" name="phone" /></label>
+      </p>
+      <p>
+        <label>Challenge: <textarea name="challenge"></textarea></label>
+      </p>
+    </form>
+  </body>
+</html>
