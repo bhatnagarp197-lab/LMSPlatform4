@@ -72,7 +72,7 @@ export function Courses() {
             </ul>
 
             <div className="flex flex-wrap items-baseline gap-3 mb-8 pb-8 border-b border-slate-200 dark:border-white/10">
-              <span className="text-4xl font-extrabold text-slate-900">₹10,000</span>
+              <span className="text-4xl font-extrabold text-slate-900 dark:text-white">₹10,000</span>
               <span className="text-xs uppercase tracking-wider text-slate-500 font-bold">
                 One-time · Lifetime access
               </span>
@@ -125,8 +125,8 @@ export function Courses() {
             </ul>
 
             <div className="flex flex-wrap items-baseline gap-3 mb-8 pb-8 border-b border-white/10">
-              <span className="text-4xl font-extrabold">₹4,999</span>
-              <span className="text-lg text-slate-400 line-through">₹7,999</span>
+              <span className="text-4xl font-extrabold">₹7,000</span>
+              <span className="text-lg text-slate-400 line-through">₹10,000</span>
               <span className="text-xs uppercase tracking-wider text-primary font-bold rounded-full bg-primary/10 px-2.5 py-1">
                 Save ₹3,000 · Launch price
               </span>

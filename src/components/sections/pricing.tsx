@@ -11,8 +11,8 @@ export function Pricing() {
     {
       name: "Certified Hybrid Performance Coach - Level 1",
       tagline: "For coaches building a hybrid / HYROX coaching practice.",
-      price: "4,999",
-      compareAt: "7,999",
+      price: "7,000",
+      compareAt: "10,000",
       save: "Save ₹3,000",
       badge: "LAUNCH OFFER — FIRST 20 STUDENTS",
       features: [
